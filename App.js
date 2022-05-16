@@ -1,13 +1,14 @@
 import axios from 'axios';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, TouchableOpacity, View,Button,ToastAndroid,Image } from 'react-native';
+import { StyleSheet, TouchableOpacity, View,Button,ToastAndroid,Image,Dimensions } from 'react-native';
 import { useState,useEffect } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 
-export default function App() {
+export default function App() { 
 
+  const [height, setHeight] = useState();
   const [image,setImage] = useState(null);
   const [selected,setSelected] = useState(false);
 
@@ -37,13 +38,14 @@ export default function App() {
       console.log(result);
       setImage(result);
       setSelected(true);
+      setHeight(result.height >=400 ? 400: result.height);
     }
     console.log(result);
   };
 
   return (
     <View style={styles.container}>
-      {image && <Image source={image} style={styles.image} />}
+      {image && <Image source={image} style={{marginHorizontal: 4,width: Dimensions.get('window').width,height:height,marginVertical: 20}} />}
       {!selected && <Button title="Pick an image from camera roll" onPress={selectPhoto} ></Button>}
       {selected && <Button title="Send photo" onPress={() => sendPhoto(image)} />}
     </View>
@@ -57,10 +59,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  image: {
-    width: 300,
-    height: 300,
-    marginVertical: 20,
-  },
-
 });
