@@ -3,10 +3,11 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, TouchableOpacity, View,Button,ToastAndroid,Image,Dimensions } from 'react-native';
 import { useState,useEffect } from 'react';
 import * as ImagePicker from 'expo-image-picker';
-import Ionicons from '@expo/vector-icons/Ionicons';
+import Lightbox from 'react-native-lightbox-v2';
 
 
-export default function App() { 
+
+export default function App({ navigator }) { 
 
   const [height, setHeight] = useState();
   const [image,setImage] = useState(null);
@@ -45,8 +46,13 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      {image && <Image source={image} style={{marginHorizontal: 4,width: Dimensions.get('window').width,height:height,marginVertical: 20}} />}
-      {!selected && <Button title="Pick an image from camera roll" onPress={selectPhoto} ></Button>}
+      {image && 
+        <Lightbox navigator={navigator} >
+          <Image source={image} style={{marginHorizontal: 4,width: Dimensions.get('window').width,height:height,marginVertical: 30}} />
+        </Lightbox>
+        
+      }
+      {!selected && <Button title="Pick an image from camera roll" onPress={selectPhoto} />}
       {selected && <Button title="Send photo" onPress={() => sendPhoto(image)} />}
     </View>
   );
@@ -58,5 +64,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
-  },
+},
+
 });
