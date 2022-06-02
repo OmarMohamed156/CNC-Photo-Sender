@@ -1,4 +1,4 @@
-import { View ,Text,StyleSheet,SafeAreaView,TouchableOpacity,ToastAndroid } from "react-native";
+import { View ,Text,StyleSheet,SafeAreaView,TouchableOpacity,ToastAndroid,Button } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
 import axios from "axios";
 import { useState } from "react";
@@ -6,7 +6,7 @@ import { useState } from "react";
 export default function Shapes(){
 
     const sendShape= (shape)=>{
-        axios.post('http://',{
+        axios.post('http://192.168.43.226/pre-set',{
             shape:shape
         }).then(res=>{
             console.log(res);
@@ -27,9 +27,14 @@ export default function Shapes(){
                     <Text style={{marginTop:30,marginHorizontal:5,fontSize:15,}}>Square</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.opacityBtn}>
-                    <Ionicons name="ellipse-outline" size={80} color="#eb4034"  onPress={()=>sendShape('circle')}/>
-                    <Text style={{marginTop:30,marginHorizontal:5,fontSize:15,}}>Circle</Text>
+                    <Ionicons name="triangle-outline" size={80} color="#eb4034"  onPress={()=>sendShape('triangle')}/>
+                    <Text style={{marginTop:30,marginHorizontal:5,fontSize:15,}}>Triangle</Text>
                 </TouchableOpacity>
+                <TouchableOpacity style={styles.opacityBtn}>
+                    <Ionicons name="happy-outline" size={80} color="#eb4034"  onPress={()=>sendShape('face')}/>
+                    <Text style={{marginTop:30,marginHorizontal:5,fontSize:15,}}>Face</Text>
+                </TouchableOpacity>
+                {/* <Button title='square'  onPress={()=>sendShape('square')} /> */}
             </View>
         </View>
     )

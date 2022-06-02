@@ -3,20 +3,40 @@ import { StyleSheet, TouchableOpacity, View,Button,ToastAndroid,Image,Dimensions
 import { useState,useEffect } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 import Lightbox from 'react-native-lightbox-v2';
-
+import icon from './assets/icon.png'
+import * as ImageManipulator from 'expo-image-manipulator';
+import { SaveFormat } from 'expo-image-manipulator';
 
 
 export default function Raster({ navigator }) { 
-
+  
   const [height, setHeight] = useState();
   const [image,setImage] = useState(null);
+  const [resizedImage,setresizedImage] = useState(null);
+  const [ws,setWs] = useState()
   const [selected,setSelected] = useState(false);
+
+  // useEffect(()=>{
+  //   var wss = new WebSocket('ws://172.28.129.:80/slave')
+  //   setWs(wss)
+  //   ws.onopen = (e)=>{
+  //     console.log('opened')
+  //   }
+  //   ws.onclose = (e) => {
+  //     console.log('closed')
+  // }
+  // },[])
+
 
 
   const sendPhoto = async (result) => {
-    console.log(result.base64);
-    axios.post('http://',{
-      picture: `data:image/jpg;base64,${result.base64}`
+    const resized = await ImageManipulator.manipulateAsync(result.uri,[
+      {resize:{width:100,height:100}}
+    ],{compress:1,base64:true})
+    console.log(resized.height)
+    // console.log(result.base64);
+    axios.post('http://192.168.43.226/image',{
+      buffer: `data:image/jpg;base64,${resized.base64}`
     }).then(res => {
       console.log(res);
       ToastAndroid.show('Photo sent',ToastAndroid.SHORT);
@@ -35,19 +55,19 @@ export default function Raster({ navigator }) {
       quality: 1,
     });
     if (!result.cancelled) {
-      console.log(result);
+      // console.log(result);
       setImage(result);
       setSelected(true);
       setHeight(result.height >=400 ? 400: result.height);
     }
-    console.log(result);
+    // console.log(result);
   };
 
   return (
     <View style={styles.container}>
       {image && 
         <Lightbox navigator={navigator} >
-          <Image source={image} style={{marginHorizontal: 4,width: Dimensions.get('window').width,height:height,marginVertical: 30}} />
+          <Image source={image} style={{marginHorizontal: 4,width: 350,height:height,marginVertical: 30}} />
         </Lightbox>
         
       }
